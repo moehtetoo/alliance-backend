@@ -3,7 +3,9 @@ const bodyParser = require('body-parser');
 const app = express();
 const port = process.env.PORT || 3000;
 const projectsRouter = require('./src/routes/projects.route');
+const cors = require('cors');
 
+app.use(cors())
 app.use(bodyParser.json());
 app.use(
   bodyParser.urlencoded({
@@ -15,7 +17,7 @@ app.get('/', (req, res) => {
   res.json({'message': 'ok'});
 })
 
-app.use('/projects', projectsRouter);
+app.use('/api/projects', projectsRouter);
 
 /* Error handler middleware */
 app.use((err, req, res, next) => {

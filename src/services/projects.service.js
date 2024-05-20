@@ -8,12 +8,15 @@ async function getMultiple(page = 1){
     `SELECT id, name, description, start_date, end_date FROM projects LIMIT ?,?`, 
     [offset, config.listPerPage]
   );
+  const [{total}] = await db.query(`SELECT FOUND_ROWS() as total`)
   const data = helper.emptyOrRows(rows);
-  const meta = {page};
+  const meta = {page, total};
 
   return {
-    data,
-    meta
+    data: {
+      list: data,
+      meta
+    }
   }
 }
 
