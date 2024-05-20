@@ -1,0 +1,36 @@
+{
+  "name": "alliance-backend",
+  "version": "1.0.0",
+  "description": "Code test for interview",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/moehtetoo/alliance-backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/moehtetoo/alliance-backend/issues"
+  },
+  "homepage": "https://github.com/moehtetoo/alliance-backend#readme",
+  "dependencies": {
+    "express": "4.17.1",
+    "mysql2": "2.3.3"
+  },
+  "devDependencies": {
+    "dotenv": "^16.4.5",
+    "jest": "27.4.5"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ],
+    "testRegex": "(/test/.*|(\\.|/)(test))\\.(js)x?$"
+  }
+}
