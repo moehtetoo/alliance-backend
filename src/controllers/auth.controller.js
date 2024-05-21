@@ -3,7 +3,7 @@ const config = require('../configs/auth.config')
 const userService = require('../services/user.service')
 const bcrypt = require('bcryptjs')
 
-async function login(req, res) {
+async function login(req, res, next) {
     try {
         const { username, password } = req.body;
         if (!username || !password) {
@@ -15,7 +15,7 @@ async function login(req, res) {
             res.status(401).send({message: 'Invalid Username Or Passwrod'});
             return;
         }
-        if(bcrypt.compareSync(password, user.password)) {
+        if(!bcrypt.compareSync(password, user.password)) {
             res.status(401).send({message: 'Invalid Username Or Passwrod'});
             return;
         }
@@ -24,13 +24,14 @@ async function login(req, res) {
             config.jwtSecret,
             { expiresIn: "1h" }
         );
-        res.send(token);
+        res.send({data: { token }});
     } catch (err) {
         res.status(401).send(err);
+        next();
     }
 }
 
-async function signUp(req,res) {
+async function signUp(req,res, next) {
     const { username, password, fullName } = req.body;
     if (!username || !password || !fullName) {
         res.status(400).send({message: 'Invalid Request Body'});
@@ -40,11 +41,13 @@ async function signUp(req,res) {
         const user = await userService.findUser(username);
         if(user) {
             res.status(400).send({message: 'User Already Exist'});
+            return;
         }
         const hashPassword = bcrypt.hashSync(password, 8);
         res.json(await userService.createUser({username, password: hashPassword, fullName}));
     } catch (error) {
         res.status(400).send({error})
+        next()
     }
 }
 
