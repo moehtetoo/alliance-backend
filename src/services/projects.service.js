@@ -10,7 +10,7 @@ async function getMultiple(page = 1){
   );
   const [{total}] = await db.query(`SELECT COUNT(*) as total FROM projects`)
   const data = helper.emptyOrRows(rows);
-  const meta = {page, total};
+  const meta = {offset, total};
 
   return {
     data: {
@@ -64,7 +64,7 @@ async function update(id, project){
 
 async function remove(id){
   const result = await db.query(
-    `DELETE FROM project WHERE id=?`, 
+    `DELETE FROM projects WHERE id=?`, 
     [id]
   );
 
