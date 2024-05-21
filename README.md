@@ -1,10 +1,13 @@
 # How To Run
-
-> yarn install
-
-> yarn start
-
-> yarn test
+```shell
+yarn install
+```
+```shell
+yarn start
+```
+```shell
+yarn test
+```
 
 ### Requirement
 - Node JS version => 4.x or higher
