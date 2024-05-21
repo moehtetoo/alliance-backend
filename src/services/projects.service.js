@@ -5,10 +5,10 @@ const config = require('../configs/general.config');
 async function getMultiple(page = 1){
   const offset = helper.getOffset(page, config.listPerPage);
   const rows = await db.query(
-    `SELECT id, name, description, start_date, end_date FROM projects LIMIT ?,?`, 
+    `SELECT id, name, description, start_date as startDate, end_date as endDate FROM projects LIMIT ?,?`, 
     [offset, config.listPerPage]
   );
-  const [{total}] = await db.query(`SELECT FOUND_ROWS() as total`)
+  const [{total}] = await db.query(`SELECT COUNT(*) as total FROM projects`)
   const data = helper.emptyOrRows(rows);
   const meta = {page, total};
 
@@ -23,13 +23,12 @@ async function getMultiple(page = 1){
 async function create(project){
   const result = await db.query(
     `INSERT INTO projects 
-    (name, description, start_date, end_date, tech_stack) 
+    (name, description, start_date, end_date) 
     VALUES 
-    (?, ?, ?, ?, ?)`, 
+    (?, ?, ?, ?)`, 
     [
       project.name, project.description,
-      project.start_date, project.end_date,
-      project.tech_stack
+      project.startDate, project.endDate ? project.endDate : null,
     ]
   );
 
@@ -46,12 +45,11 @@ async function update(id, project){
   const result = await db.query(
     `UPDATE projects 
     SET name=?, description=?, start_date=?, 
-    end_date=?, tech_stack=? 
+    end_date=?
     WHERE id=?`, 
     [
       project.name, project.description,
-      project.start_date, project.end_date,
-      project.tech_stack, id
+      project.startDate, project.endDate, id
     ]
   );
 

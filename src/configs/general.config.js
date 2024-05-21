@@ -1,5 +1,5 @@
 const general = {
- listPerPage: 10
+ listPerPage: 5
 };
 
 module.exports = general;
