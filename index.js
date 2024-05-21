@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const app = express();
 const port = process.env.PORT || 3000;
 const projectsRouter = require('./src/routes/projects.route');
+const authRouter = require('./src/routes/auth.route');
 const cors = require('cors');
 
 app.use(cors())
@@ -18,6 +19,8 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/projects', projectsRouter);
+
+app.use('/api/auth', authRouter)
 
 /* Error handler middleware */
 app.use((err, req, res, next) => {
