@@ -7,16 +7,12 @@ async function login(req, res, next) {
     try {
         const { username, password } = req.body;
         if (!username || !password) {
-            res.status(401).send({message: 'Invalid Request Body'});
+            next({statusCode: 401, message: 'Invalid Request Body'})
             return;
         }
         const user = await userService.findUser(username);
-        if(!user) {
-            res.status(401).send({message: 'Invalid Username Or Passwrod'});
-            return;
-        }
-        if(!bcrypt.compareSync(password, user.password)) {
-            res.status(401).send({message: 'Invalid Username Or Passwrod'});
+        if(!user || !bcrypt.compareSync(password, user.password)) {
+            next({statusCode: 401, message: 'Invalid Username Or Passwrod'})
             return;
         }
         const token = jwt.sign(
@@ -26,28 +22,26 @@ async function login(req, res, next) {
         );
         res.send({data: { token }});
     } catch (err) {
-        res.status(401).send(err);
-        next();
+        next(err);
     }
 }
 
 async function signUp(req,res, next) {
     const { username, password, fullName } = req.body;
     if (!username || !password || !fullName) {
-        res.status(400).send({message: 'Invalid Request Body'});
+        next({statusCode: 400, message: 'Invalid Request Body'});
         return;
     }
     try {
         const user = await userService.findUser(username);
         if(user) {
-            res.status(400).send({message: 'User Already Exist'});
+            next({statusCode: 400, message: 'User Already Exist'});
             return;
         }
         const hashPassword = bcrypt.hashSync(password, 8);
         res.json(await userService.createUser({username, password: hashPassword, fullName}));
     } catch (error) {
-        res.status(400).send({error})
-        next()
+        next(error)
     }
 }
 
